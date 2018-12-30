@@ -1,0 +1,164 @@
+<html>
+<head>
+<title> Saap  </title>
+</head>
+<body>
+<canvas id = "myCanvas" width = "600" height = "500"></canvas>
+<br>
+<b> Score : <div id ="score" name="score" style="display:inline"/> </b>
+<script> var canvas;
+var canvasContext;
+var areywaah = true;
+var block = 10;
+var x = block*10; var y= block*10;
+var foodX; var foodY; 
+var snake = [];
+var len = 6;
+var direction = 'right';
+var score =0;
+var timeoutVar;
+</script>
+<script>
+	var init = function(){
+		console.log('calling init');
+		canvas = document.getElementById("myCanvas");
+	
+		canvasContext = canvas.getContext('2d');
+	
+
+		createSnake();
+		generateFood();
+		gamePlay();	
+	}
+	
+	var createSnake = function(){
+		for( var i= 0; i<len; i++ ){
+			var box  = [x+i*block,y];
+			snake.push(box);
+		}
+	}
+	
+	var printSnake = function(){
+		canvasContext.fillStyle = 'black';
+		canvasContext.fillRect(0,0, canvas.width, canvas.height);
+		canvasContext.fillStyle = ' #00FF00';
+		for(var j=0; j<snake.length; j++){
+		
+			canvasContext.fillRect(snake[j][0],snake[j][1], block, block);
+		}
+		canvasContext.fillStyle = 'red';
+		canvasContext.fillRect(foodX, foodY, block, block);
+	}
+	
+	var gamePlay = function(){
+	
+		document.onkeydown = function(event){
+		
+			var keycode = event.keyCode || window.event.keyCode;
+	
+			switch (keycode) {
+				case 37:
+					if(direction != 'right')
+					direction='left';
+					break;
+				case 38:
+					if(direction!='down')
+					direction='up';
+					break;
+				case 39:
+					if(direction!='left')
+					direction='right';
+					break;
+				case 40:
+					if(direction!='up')
+					direction='down';
+					break;
+			}
+		}
+		
+		snake.shift();
+		
+		x = snake[snake.length-1][0];
+		y = snake[snake.length-1][1];
+		
+		if	(direction === 'right' ){
+			x = x+block;
+		}
+		else if(direction === 'left' ){
+			x = x-block;
+		}
+		else if(direction === 'up'){
+			y = y-block;
+		}
+		else if(direction === 'down'){
+			y = y+block;
+		}
+		
+		if(x >= canvas.width ) x = 0;
+		if(x < 0) x = canvas.width;
+		if(y >= canvas.height ) y = 0;
+		if(y < 0) y = canvas.height;
+		
+		if(foodX===x && foodY===y ){
+		
+			score++;
+			document.getElementById('score').innerHTML=score;
+		
+				foodX = Math.floor(Math.random()*canvas.width/block)*block;
+				foodY = Math.floor(Math.random()*canvas.height/block)*block;
+				snake.push([x,y]);
+
+					if	(direction === 'right' ){
+						x = x+block;
+					}
+					else if(direction === 'left' ){
+						x = x-block;
+					}
+					else if(direction === 'up'){
+						y = y-block;
+					}
+					else if(direction === 'down'){
+						y = y+block;
+					}
+		}
+		
+		snake.push([x,y]);
+		
+		for(var k=snake.length-3;  k> 0; k--){
+			if(x === snake[k][0] && y === snake[k][1]){
+			
+			
+			alert('Game Over! Score:'+score);
+			clearTimeout(timeoutVar);
+			
+			score=0;
+			snake.length=4;
+			}
+	
+		}
+		printSnake();
+
+			
+		timeoutVar = setTimeout(gamePlay, 60);
+	
+	}
+	
+
+		
+
+	
+	
+	var generateFood = function(){
+		
+		 foodX = Math.floor(Math.random()*canvas.width/block)*block;
+		 foodY = Math.floor(Math.random()*canvas.height/block)*block;
+	}
+	init();
+</script>
+
+
+
+</body>
+
+
+</html>
